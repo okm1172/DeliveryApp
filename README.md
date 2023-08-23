@@ -1,6 +1,6 @@
 # userapp
 
-A new Flutter project.
+배달앱 (사용자/배달) 연동 및 구현
 
 ## Getting Started
 
