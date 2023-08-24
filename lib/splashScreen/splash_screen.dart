@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if(await firebaseAuth.currentUser != null){
         //현재 user가 있는 상태라면, user의 정보들을 알아내는 부분
         firebaseAuth.currentUser != null ? AssistMethods.readCurrentOnlineUserInfo() : null;
-        Navigator.push(context,MaterialPageRoute(builder: (c) => MainScreen()));
+        Navigator.push(context,MaterialPageRoute(builder: (c) => LoginScreen()));
       }
       else{
         Navigator.push(context,MaterialPageRoute(builder: (c) => LoginScreen()));
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
         child: Text(
-          'Trippo',
+          'Trip',
           style: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
