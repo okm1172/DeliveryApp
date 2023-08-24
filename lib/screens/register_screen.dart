@@ -2,8 +2,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:userapp/global/global.dart';
+import 'package:userapp/screens/forgot_password_screen.dart';
+import 'main_screen.dart';
 
 
 class RegisterScreen extends StatefulWidget {
@@ -50,7 +53,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           userRef.child(currentUser!.uid).set(userMap);
 
         }
-      })
+        await Fluttertoast.showToast(msg: "Successfully Registered");
+        Navigator.push(context,MaterialPageRoute(builder: (c) => MainScreen()));
+      }).catchError((errorMessage){
+        Fluttertoast.showToast(msg: "Error occured: \n $errorMessage");
+      });
+    }
+    else{
+      Fluttertoast.showToast(msg: "Not all field are valid");
     }
   }
 
@@ -370,7 +380,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 SizedBox(height:20),
 
                                 GestureDetector(
-                                    onTap: (){},
+                                    onTap: (){
+                                      Navigator.push(context,MaterialPageRoute(builder: (c) => ForgotPasswordScreen()));
+                                    },
                                     child: Text(
                                       'Forget Password?',
                                       style: TextStyle(

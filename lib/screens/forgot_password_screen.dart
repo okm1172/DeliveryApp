@@ -2,40 +2,31 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:userapp/screens/forgot_password_screen.dart';
 import 'package:userapp/screens/register_screen.dart';
 
 import '../global/global.dart';
-import 'main_screen.dart';
+import 'login_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   final emailTextEditingController = TextEditingController();
-  final passwordTextEditingController = TextEditingController();
-
-  bool _passwordVisible = false;
 
   final _formKey = GlobalKey<FormState>();
 
   void _submit() async{
     if(_formKey.currentState!.validate()){
-      await firebaseAuth.signInWithEmailAndPassword(
+      await firebaseAuth.sendPasswordResetEmail(
         //trim은 문자열 앞과 뒤 공백을 제거해줍니다.
         email: emailTextEditingController.text.trim(),
-        password: passwordTextEditingController.text.trim(),
       ).then((auth) async{
-        currentUser = auth.user;
-
-        await Fluttertoast.showToast(msg: "Successfully Logged In");
-        Navigator.push(context,MaterialPageRoute(builder: (c) => MainScreen()));
+        await Fluttertoast.showToast(msg: "We have sent you an email to recover password, please check email");
       }).catchError((errorMessage){
         Fluttertoast.showToast(msg: "Error occured: \n $errorMessage");
       });
@@ -76,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           SizedBox(height:80),
 
-                          Text('Login',
+                          Text('Forgot Password Screen',
                             style: TextStyle(
                               color: darkTheme ? Colors.amber.shade400 : Colors.blue,
                               fontSize: 25,
@@ -142,63 +133,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                     SizedBox(height: 15),
 
-                                    TextFormField(
-                                      obscureText: !_passwordVisible,
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(50)
-                                      ],
-                                      style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold),
-                                      decoration: InputDecoration(
-                                          hintText: 'Password',
-                                          hintStyle: TextStyle(
-                                            color : Colors.grey,
-                                          ),
-                                          filled: true,
-                                          fillColor: darkTheme ? Colors.black45 : Colors.grey.shade200,
-                                          //꼭지점 둥글게 깎기
-                                          border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(40),
-                                              borderSide: BorderSide(
-                                                style: BorderStyle.none,
-                                                width: 0,
-                                              )
-                                          ),
-                                          //textform 에서 말그대로 앞에 존재하는 icon를 말합니다.
-                                          prefixIcon: Icon(Icons.key, color:darkTheme ? Colors.amber.shade400 : Colors.grey),
-                                          suffixIcon: IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                _passwordVisible = !_passwordVisible;
-                                              });
-                                            },
-                                            icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off,
-                                              color: darkTheme ? Colors.amber.shade400 : Colors.grey,
-                                            ),
-                                          )
-                                      ),
-                                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                                      validator: (text) {
-                                        if(text==null || text.isEmpty)
-                                        {
-                                          return "Password can\'t be empty";
-                                        }
-                                        if(text.length<6)
-                                        {
-                                          return "Please enter a valid password";
-                                        }
-                                        if(text.length>50)
-                                        {
-                                          return "Password can\'t be more than 50";
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (text) => setState(() {
-                                        passwordTextEditingController.text = text;
-                                      }),
-                                    ),
-
-                                    SizedBox(height: 15),
-
                                     ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           primary: darkTheme ? Colors.amber.shade300 : Colors.blue,
@@ -213,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           _submit();
                                         },
                                         child: Text(
-                                            'Login',
+                                            'Send Reset Password Link',
                                             style: TextStyle(
                                               fontSize: 20,
                                             )
@@ -223,9 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     SizedBox(height:20),
 
                                     GestureDetector(
-                                        onTap: (){
-                                          Navigator.push(context,MaterialPageRoute(builder: (c) => ForgotPasswordScreen()));
-                                        },
+                                        onTap: (){},
                                         child: Text(
                                           'Forget Password?',
                                           style: TextStyle(
@@ -240,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "Doesn't have an account?",
+                                          "Already have an account?",
                                           style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 15,
@@ -251,10 +183,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                         GestureDetector(
                                             onTap: (){
-                                              Navigator.push(context,MaterialPageRoute(builder: (c) => RegisterScreen()));
+                                              Navigator.push(context,MaterialPageRoute(builder: (c) => LoginScreen()));
                                             },
                                             child: Text(
-                                              "Register",
+                                              "Login",
                                               style: TextStyle(
                                                 fontSize:15,
                                                 color: darkTheme ? Colors.amber.shade400 : Colors.blue,
@@ -273,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ]
           )
-      )
+      ),
     );
   }
 }
