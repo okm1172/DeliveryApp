@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         theme : MyThemes.lightTheme,
         darkTheme: MyThemes.darkTheme,
         debugShowCheckedModeBanner: false,
-        home: SearchPlacesScreen(),
+        home: SplashScreen(),
       )
     );
   }

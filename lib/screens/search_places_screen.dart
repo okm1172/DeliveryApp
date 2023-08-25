@@ -18,7 +18,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
 
   findPlaceAutoCompleteSearch(String inputText) async{
     if(inputText.length>1){
-      String urlAutoCompleteSearch = "https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=$inputText&key=$mapKey";
+      String urlAutoCompleteSearch = "https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=$inputText&key=$mapKey&components=country:KR";
 
       var responseAutoCompleteSearch = await RequestAssist.receiveRequest(urlAutoCompleteSearch);
 
@@ -30,7 +30,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
         var placePredictions = responseAutoCompleteSearch["predictions"];
 
         //각각의 data를 PredictedPlaces 변수로 하나 차곡차곡 넣는 작업
-        var placePredictionsList = placePredictions.map((jsonData) => PredictedPlaces.fromJson(jsonData)).toList();
+        var placePredictionsList = (placePredictions as List).map((jsonData) => PredictedPlaces.fromJson(jsonData)).toList();
 
         setState(() {
           placesPredictedList = placePredictionsList;
@@ -49,7 +49,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: darkTheme ? Colors.black : Colors.white,
+        backgroundColor: darkTheme ? Colors.white : Colors.white,
         appBar: AppBar(
           backgroundColor: darkTheme ? Colors.amber.shade300 : Colors.blue,
           leading: GestureDetector(
@@ -95,12 +95,13 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
                             child: Padding(
                                 padding: EdgeInsets.all(8),
                               child: TextField(
+                                //value는 검색 결과
                                 onChanged: (value){
                                   findPlaceAutoCompleteSearch(value);
                                 },
                                 decoration: InputDecoration(
                                   hintText: "Search location here ....",
-                                  fillColor : darkTheme ? Colors.black : Colors.white,
+                                  fillColor : darkTheme ? Colors.white : Colors.white,
                                   filled: true,
                                   border: InputBorder.none,
                                   contentPadding: EdgeInsets.only(
@@ -118,7 +119,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
                 )
               )
             ),
-            //전에 입력했었던것들 출력하기
+            //예상 predict 장소 출력하기
             (placesPredictedList.length>0)
             ? Expanded(
                 child: ListView.separated(
